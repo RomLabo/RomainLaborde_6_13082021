@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
+const path = require('path');
 
 
 mongoose.connect('mongodb+srv://scaleop-ro34:gtx4R22yB4ctK1@piiquantedatabase.ztyrs.mongodb.net/PiiquanteDataBase?retryWrites=true&w=majority',
@@ -12,6 +13,8 @@ mongoose.connect('mongodb+srv://scaleop-ro34:gtx4R22yB4ctK1@piiquantedatabase.zt
 ;
 
 const app = express();
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
