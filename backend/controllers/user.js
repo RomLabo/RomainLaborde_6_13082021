@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+let attemptToConnect = 0;
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
@@ -27,8 +27,15 @@ exports.login = (req, res, next) => {
     bcrypt.compare(req.body.password, user.password)
       .then(valid => {
         if (!valid) {
-          return res.status(401).json({ error: 'Mot de passe incorrect !' });
+          attemptToConnect ++;
+          console.log(attemptToConnect); 
+          if (attemptToConnect >= 3) {
+            return res.status(423).json({ error: 'Compte utilisateur bloqué !' });
+          } else {
+            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+          }
         }
+        attemptToConnect = 0;
         res.status(200).json({
           userId: user._id,
           token: jwt.sign(
@@ -42,3 +49,4 @@ exports.login = (req, res, next) => {
   })
   .catch(error => res.status(500).json({ error }));
 };
+
