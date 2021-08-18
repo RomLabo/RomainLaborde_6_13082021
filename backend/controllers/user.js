@@ -1,25 +1,20 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const validPassword = require('../models/ValidPassword');
 let attemptToConnect = 0;
 
 exports.signup = (req, res, next) => {
-  if (!validPassword.validate(req.body.password)) {
-    res.status(412).json({ message: 'Le mot de passe doit contenir entre 8 et 15 caractères, dont 1 majuscule, 1 minuscule, 2 chiffres et 1 caractère spécial'})
-  } else {
-    bcrypt.hash(req.body.password, 10)
-      .then(hash => {
-        const user = new User({
-          email: req.body.email,
-          password: hash
-        });
-        user.save()
-          .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error }));
-  }
+  bcrypt.hash(req.body.password, 10)
+    .then(hash => {
+      const user = new User({
+        email: req.body.email,
+        password: hash
+      });
+      user.save()
+        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+        .catch(error => res.status(400).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
 };
 
 
