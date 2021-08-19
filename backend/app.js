@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
+require('dotenv').config()
 
 
-mongoose.connect('mongodb+srv://scaleop-ro34:gtx4R22yB4ctK1@piiquantedatabase.ztyrs.mongodb.net/PiiquanteDataBase?retryWrites=true&w=majority',
+mongoose.connect(process.env.DB_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
