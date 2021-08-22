@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
+const cookieSession = require('cookie-session');
 require('dotenv').config()
-
 
 mongoose.connect(process.env.DB_URL,
   { useNewUrlParser: true,
@@ -26,8 +26,13 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
 
 app.use('/api/sauces', sauceRoutes);
+
 app.use('/api/auth', userRoutes);
 
 
