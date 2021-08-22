@@ -28,7 +28,8 @@ app.use(express.json());
 
 app.use(cookieSession({
   name: 'session',
-  keys: ['key1', 'key2']
+  maxAge: 5 * 60 * 60 * 1000,
+  keys: [process.env.COOKIE_KEY]
 }))
 
 app.use('/api/sauces', sauceRoutes);
