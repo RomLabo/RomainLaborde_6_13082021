@@ -3,12 +3,21 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fpe = require('node-fpe');
 require('dotenv').config()
-const ascii = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'.split('');
+const ascii = ' !"#$%&\'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'.split('');
 const cipher = fpe({ secret: process.env.SECRET_CIP, domain: ascii });
+const regexForSplitEmail =  /\@|\./;
 
+let encryptedEmail = "";
+const encryptEmail = (email) => {
+  const arrayOfEmailSubStrings = email.split(regexForSplitEmail, 3);
+  const fisrtSubstringOfEmail = cipher.encrypt(arrayOfEmailSubStrings[0]);
+  const secondSubStringOfEmail = cipher.encrypt(arrayOfEmailSubStrings[1]);
+  const thirdSubStringOfEmail = cipher.encrypt(arrayOfEmailSubStrings[2]);
+  encryptedEmail =  fisrtSubstringOfEmail + "@" + secondSubStringOfEmail + "." + thirdSubStringOfEmail;
+};
 
 exports.signup = (req, res, next) => {
-  const encryptedEmail =  cipher.encrypt(req.body.email);
+  encryptEmail(req.body.email);
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       const user = new User({
@@ -24,7 +33,7 @@ exports.signup = (req, res, next) => {
 
 
 exports.login = (req, res, next) => {
-  const encryptedEmail =  cipher.encrypt(req.body.email);
+  encryptEmail(req.body.email);
   User.findOne({ email: encryptedEmail })
   .then(user => {
     if (!user) {
