@@ -1,6 +1,7 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
+
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
     const sauce = new Sauce({
@@ -9,7 +10,7 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save()
       .then(() => res.status(201).json({ message: 'Nouvelle sauce enregistrée !'}))
-      .catch(error => res.status(400).json({ error }));
+      .catch(error => res.status(400).json({ error }));  
 };
 
 exports.getOneSauce = (req, res, next) => {
@@ -55,7 +56,7 @@ exports.createStateLike = (req, res, next) => {
         $inc: { likes: -1 }, 
         $pull: { usersLiked: req.body.userId }
       })
-      .then(() => res.status(201).json({ message: "Votre like a bien été annulé."}))
+      .then(() => res.status(200).json({ message: "Votre like a bien été annulé."}))
       .catch(error => res.status(400).json({ error }));
       break;
     case 0 && Sauce.find({ usersDisliked: req.body.userId }):
@@ -63,7 +64,7 @@ exports.createStateLike = (req, res, next) => {
         $inc: { dislikes: -1 }, 
         $pull: { usersDisliked: req.body.userId }
       })
-      .then(() => res.status(201).json({ message: "Votre dislike a bien été annulé."}))
+      .then(() => res.status(200).json({ message: "Votre dislike a bien été annulé."}))
       .catch(error => res.status(400).json({ error }));
       break;  
     case 1:

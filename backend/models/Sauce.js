@@ -1,43 +1,33 @@
 const mongoose = require('mongoose');
-const sauceInfoRegex = /^[A-Z][A-Za-z\é\è\ê\ï\-]+$/;
+const sauceInfoRegex = /^[A-Za-z\é\è\ê\ï\-,.: ]+$/;
+const validator = (val) =>  sauceInfoRegex.test(val);
+const custom = [validator, `{PATH} ne doit pas contenir de caractères spéciaux autre que ',' '.' '-' ':' .`]
+
 
 const sauceSchema = mongoose.Schema({
     userId: { type: String, required: true },
     name: { 
         type: String,
-        validate: {
-            validator: function(v) {
-              return sauceInfoRegex.test(v);
-            },
-            message: props => `${props.value} n'est pas un nom valide`
-        },
+        minLength: [3, "Le nom doit avoir minimum 3 caractères"],
+        maxLength: [30, "Le nom doit avoir maximum 30 caractères"],
+        validate: custom,
         required: true },
     manufacturer: {
         type: String,
-        validate: {
-            validator: function(v) {
-              return sauceInfoRegex.test(v);
-            },
-            message: props => `${props.value} n'est pas un nom de fabricant valide`
-        },
+        minLength: [3, "Le nom du fabricant doit avoir minimum 3 caractères"],
+        maxLength: [30, "Le nom du fabricant doit avoir maximum 30 caractères"],
+        validate: custom,
         required: true },
     description: {
         type: String,
-        validate: {
-            validator: function(v) {
-              return sauceInfoRegex.test(v);
-            },
-            message: props => `Vérifier que la description ne comporte pas de caractère spéciaux hormis "," et "."`
-        },
+        minLength: [3, "La description doit avoir minimum 3 caractères"],
+        validate: custom,
         required: true },
     mainPepper: {
         type: String,
-        validate: {
-            validator: function(v) {
-              return sauceInfoRegex.test(v);
-            },
-            message: props => `${props.value} n'est pas un nom d'ingrédient valide`
-        },
+        minLength: [3, "Le nom d\'ingrédient doit avoir minimum 3 caractères"],
+        maxLength: [30, "Le nom d\'ingrédient doit avoir maximum 30 caractères"],
+        validate: custom,
         required: true },
     imageUrl: { type: String, required: true },
     heat: { type: Number, required: true },
