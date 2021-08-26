@@ -4,6 +4,7 @@ const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
 const path = require('path');
 const cookieSession = require('cookie-session');
+const helmet = require("helmet");
 require('dotenv').config()
 
 mongoose.connect(process.env.DB_URL,
@@ -14,6 +15,9 @@ mongoose.connect(process.env.DB_URL,
 ;
 
 const app = express();
+
+app.use(helmet());
+
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
