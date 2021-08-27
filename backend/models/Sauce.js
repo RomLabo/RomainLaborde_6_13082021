@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const sauceInfoRegex = /^[A-Za-z\é\è\ê\ï\-,.: ]+$/;
+
 const validator = (val) =>  sauceInfoRegex.test(val);
 const custom = [validator, `{PATH} ne doit pas contenir de caractères spéciaux autre que ',' '.' '-' ':' .`]
-
 
 const sauceSchema = mongoose.Schema({
     userId: { type: String, required: true },
@@ -31,8 +31,8 @@ const sauceSchema = mongoose.Schema({
         required: true },
     imageUrl: { type: String, required: true },
     heat: { type: Number, required: true },
-    likes: { type: Number },
-    dislikes: { type: Number },
+    likes: { type: Number, default: 0 },
+    dislikes: { type: Number, default: 0 },
     usersLiked: { type: Array },
     usersDisliked: { type: Array },
 });

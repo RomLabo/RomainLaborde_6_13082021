@@ -31,7 +31,6 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-
 exports.login = (req, res, next) => {
   encryptEmail(req.body.email);
   User.findOne({ email: encryptedEmail })
